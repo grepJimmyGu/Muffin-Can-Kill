@@ -171,3 +171,4 @@ Neural_bag <- bag(x = train_data[,7:34], B = 2, y = as.factor(train_data[,6]), b
 Neural_bag <- predict(Neural_bag, test_data[,7:34], type = "class")
 table(Neural_bag, test_data[,6])
 
+################## Test Git hub #############################
