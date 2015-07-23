@@ -13,7 +13,7 @@ qgrams(x, q=2, useNames=FALSE)
 qgrams(x, q=2, useBytes=TRUE)
 qgrams(x, q=2, useBytes=TRUE, useNames=TRUE)
 
-################# #####################
+################# Compare different algorithm #####################
 
 Dist_Check <- function(a, b){
     a <- tolower(a)
