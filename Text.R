@@ -39,17 +39,35 @@ Dist_Check("Highway", "Highway")
 
 Test_address <- as.character(unique(OR_Roster$Line1Address))
 
-# Remove the punctuation/remove digit/change it to lower case
+############ Remove the punctuation/remove digit/change it to lower case ###########
 Cleaned_address <- as.character(unique(apply(as.matrix(Test_address),1, function(x) tolower(gsub("[[:digit:]]|[[:punct:]]","",x, ignore.case = TRUE)))))
 
+############ Test the algorithm to evaluate the distance between two strings ################
 JW_dist <- stringdistmatrix(Cleaned_address, Cleaned_address, method = "cosine", q = 1)
 
 Quality <- function(x, th){
   hist(JW_dist[x,])
-  return(data.frame(original = Cleaned_address[x], comparison = Cleaned_address[which(JW_dist[x,]<= th)]))
+  return(data.frame(comparison = Cleaned_address[x], original = Cleaned_address[which(JW_dist[x,]<= th)], distance = JW_dist[x,which(JW_dist[x,]<= th)]))
 }
 
+Quality(1, 0.05)
 
-a <- Cleaned_address[which(JW_dist[25,]<= 0.05)]
-b <- Cleaned_address[25]
-Dist_Check(b, a[3])
+
+################## How do you replace the part by the standardized part ##################
+Replace <- function(x, replacement){
+  # Need to update to vectorized calculation
+  original <- gsub("[[:digit:]]|[[:punct:]]","",x, ignore.case = TRUE)
+  standardized <- gsub(original, replacement, x, ignore.case = TRUE)
+  return(standardized)
+}
+
+Replace(Test_address[1], Cleaned_address[1])
+
+Original_address <- as.character(apply(as.matrix(OR_Roster$Line1Address),1, function(x) tolower(gsub("[[:digit:]]|[[:punct:]]","",x, ignore.case = TRUE))))
+
+##### One test case ####
+Sample <- Quality(1,0.05)
+Original_address <- as.data.frame(cbind(NPI = c(1:11616), original = Original_address))
+Sample_result <- merge(Original_address, Sample, by = c("original"))
+
+##### Then we can modify the replace function to vectorized computation and replace #####
